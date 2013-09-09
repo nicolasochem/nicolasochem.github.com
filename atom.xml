@@ -4,7 +4,7 @@
   <title><![CDATA[Brain Passthrough]]></title>
   <link href="http://nicolasochem.github.io/atom.xml" rel="self"/>
   <link href="http://nicolasochem.github.io/"/>
-  <updated>2013-09-09T00:32:40-07:00</updated>
+  <updated>2013-09-09T00:36:48-07:00</updated>
   <id>http://nicolasochem.github.io/</id>
   <author>
     <name><![CDATA[Nicolas Ochem]]></name>
@@ -22,7 +22,7 @@
 
 <p>Often, you need to pass the virtualization feature to the guest so that it behaves like a virtualization host. But on Intel, this feature is named &ldquo;vmx&rdquo; and on AMD, it is named &ldquo;svm&rdquo;.</p>
 
-<p>If like me you have a heterogeneous pool of hypervisors, some Intel and some AMD, and you do not wish to write a different VM definition, here is the CPU node XML I am using to ensure the virtualizations extensions will be available in my guest, no matter if running on Intel or AMD :</p>
+<p>If like me you have a heterogeneous pool of hypervisors, some Intel and some AMD, and you do not wish to write a different VM definition, here is the CPU node XML I am using to ensure the virtualization extensions will be available in my VM, no matter if running on Intel or AMD :</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
