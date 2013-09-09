@@ -1,16 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[Brain Passthrough]]></title>
   <link href="http://nicolasochem.github.io/atom.xml" rel="self"/>
   <link href="http://nicolasochem.github.io/"/>
-  <updated>2013-09-08T23:07:23-07:00</updated>
+  <updated>2013-09-08T23:34:08-07:00</updated>
   <id>http://nicolasochem.github.io/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Nicolas Ochem]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Nested virtualization : a generic CPU config for Intel and AMD]]></title>
+    <link href="http://nicolasochem.github.io/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd/"/>
+    <updated>2013-09-08T23:20:00-07:00</updated>
+    <id>http://nicolasochem.github.io/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd</id>
+    <content type="html"><![CDATA[<p>Nested virtualization with Libvirt is not straightforward. Your mileage may vary depending on your CPU and operating system.</p>
+
+<p>Often, you need to pass the virtualization feature to the guest so that it behaves like a virtualization host. But on Intel, this feature is named &ldquo;vmx&rdquo; and on AMD, it is named &ldquo;svm&rdquo;.</p>
+
+<p>If like me you have a heterogeneous pool of hypervisors, some Intel and some AMD, and you do not wish to write a different VM definition, here is the CPU node XML I am using to ensure the virtualizations extensions will be available in my guest, no matter if running on Intel or AMD :</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;cpu</span> <span class="na">mode=</span><span class="s">&#39;custom&#39;</span> <span class="na">match=</span><span class="s">&#39;exact&#39;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;model</span> <span class="na">fallback=</span><span class="s">&#39;allow&#39;</span><span class="nt">&gt;</span>cpu64-rhel5<span class="nt">&lt;/model&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;vmx&#39;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;svm&#39;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;fxsr_opt&#39;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;monitor&#39;</span><span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;mmxext&#39;</span><span class="nt">/&gt;</span>
+</span><span class='line'><span class="nt">&lt;/cpu&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
 </feed>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: libvirt | Brain Passthrough]]></title>
+  <link href="http://nicolasochem.github.io/blog/categories/libvirt/atom.xml" rel="self"/>
+  <link href="http://nicolasochem.github.io/"/>
+  <updated>2013-09-08T23:34:08-07:00</updated>
+  <id>http://nicolasochem.github.io/</id>
+  <author>
+    <name><![CDATA[Nicolas Ochem]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Nested virtualization : a generic CPU config for Intel and AMD]]></title>
+    <link href="http://nicolasochem.github.io/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd/"/>
+    <updated>2013-09-08T23:20:00-07:00</updated>
+    <id>http://nicolasochem.github.io/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd</id>
+    <content type="html"><![CDATA[<p>Nested virtualization with Libvirt is not straightforward. Your mileage may vary depending on your CPU and operating system.</p>
+
+<p>Often, you need to pass the virtualization feature to the guest so that it behaves like a virtualization host. But on Intel, this feature is named &ldquo;vmx&rdquo; and on AMD, it is named &ldquo;svm&rdquo;.</p>
+
+<p>If like me you have a heterogeneous pool of hypervisors, some Intel and some AMD, and you do not wish to write a different VM definition, here is the CPU node XML I am using to ensure the virtualizations extensions will be available in my guest, no matter if running on Intel or AMD :</p>
+
+<p><code>xml
+&lt;cpu mode='custom' match='exact'&gt;
+  &lt;model fallback='allow'&gt;cpu64-rhel5&lt;/model&gt;
+  &lt;feature policy='optional' name='vmx'/&gt;
+  &lt;feature policy='optional' name='svm'/&gt;
+  &lt;feature policy='optional' name='fxsr_opt'/&gt;
+  &lt;feature policy='optional' name='monitor'/&gt;
+  &lt;feature policy='optional' name='mmxext'/&gt;
+&lt;/cpu&gt;
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>
