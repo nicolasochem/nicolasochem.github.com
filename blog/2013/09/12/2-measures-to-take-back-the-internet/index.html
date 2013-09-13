@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Mind Passthrough</title>
+  <title>2 measures to take back the Internet - Mind Passthrough</title>
   <meta name="author" content="Nicolas Ochem">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://nicolasochem.github.io">
+  <link rel="canonical" href="http://nicolasochem.github.io/blog/2013/09/12/2-measures-to-take-back-the-internet">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Mind Passthrough" type="application/atom+xml">
@@ -63,15 +63,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/09/12/2-measures-to-take-back-the-internet/">2 Measures to Take Back the Internet</a></h1>
+      <h1 class="entry-title">2 Measures to Take Back the Internet</h1>
     
     
       <p class="meta">
@@ -94,7 +91,7 @@
   </header>
 
 
-  <div class="entry-content"><p>They are at it again. Verizon is trying to <a href="http://www.infoworld.com/d/the-industry-standard/verizons-diabolical-plan-turn-the-web-pay-view-226662?page=0,0">turn the Internet into cable TV</a>. The Europen Commission is pushing <a href="http://www.laquadrature.net/en/kroes-unacceptable-anti-net-neutrality-law-rushed-despite-criticisms">carrier-controlled prioritization of traffic</a> in the Telecom package.</p>
+<div class="entry-content"><p>They are at it again. Verizon is trying to <a href="http://www.infoworld.com/d/the-industry-standard/verizons-diabolical-plan-turn-the-web-pay-view-226662?page=0,0">turn the Internet into cable TV</a>. The Europen Commission is pushing <a href="http://www.laquadrature.net/en/kroes-unacceptable-anti-net-neutrality-law-rushed-despite-criticisms">carrier-controlled prioritization of traffic</a> in the Telecom package.</p>
 
 <p>Ten years ago the Internet was a thriving, neutral environment with a low barrier of entry to newcomers. But arguably, today&rsquo;s Internet is much more important to civil society. People from various backgrounds have stepped in the debate, and have told us that it is not just a bunch of engineer&rsquo;s issues anymore.</p>
 
@@ -110,22 +107,16 @@ Not that we could bring the network 10 years back. New usages, new traffic patte
 </ul>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd/">Nested Virtualization : A Generic CPU Config for Intel and AMD</a></h1>
-    
-    
-      <p class="meta">
-        
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Nicolas Ochem</span></span>
+
+      
 
 
 
@@ -137,50 +128,32 @@ Not that we could bring the network 10 years back. New usages, new traffic patte
   
 
 
-<time datetime="2013-09-08T23:20:00-07:00" pubdate data-updated="true">Sep 8<span>th</span>, 2013</time>
-        
-      </p>
+<time datetime="2013-09-12T21:53:00-07:00" pubdate data-updated="true">Sep 12<span>th</span>, 2013</time>
+      
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://nicolasochem.github.io/blog/2013/09/12/2-measures-to-take-back-the-internet/" data-via="" data-counturl="http://nicolasochem.github.io/blog/2013/09/12/2-measures-to-take-back-the-internet/" >Tweet</a>
+  
+  
+  
+</div>
 
-
-  <div class="entry-content"><p>Nested virtualization with Libvirt is not straightforward. Your mileage may vary depending on your CPU and operating system.</p>
-
-<p>Often, you need to pass the virtualization feature to the guest so that it behaves like a virtualization host. But on Intel, this feature is named &ldquo;vmx&rdquo; and on AMD, it is named &ldquo;svm&rdquo;.</p>
-
-<p>If like me you have a heterogeneous pool of hypervisors, some Intel and some AMD, and you do not wish to write a different VM definition, here is the CPU node XML I am using to ensure the virtualization extensions will be available in my VM, no matter if running on Intel or AMD :</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;cpu</span> <span class="na">mode=</span><span class="s">&#39;custom&#39;</span> <span class="na">match=</span><span class="s">&#39;exact&#39;</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;model</span> <span class="na">fallback=</span><span class="s">&#39;allow&#39;</span><span class="nt">&gt;</span>cpu64-rhel5<span class="nt">&lt;/model&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;vmx&#39;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;svm&#39;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;fxsr_opt&#39;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;monitor&#39;</span><span class="nt">/&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;feature</span> <span class="na">policy=</span><span class="s">&#39;optional&#39;</span> <span class="na">name=</span><span class="s">&#39;mmxext&#39;</span><span class="nt">/&gt;</span>
-</span><span class='line'><span class="nt">&lt;/cpu&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd/" title="Previous Post: Nested virtualization : a generic CPU config for Intel and AMD">&laquo; Nested virtualization : a generic CPU config for Intel and AMD</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -204,6 +177,7 @@ Not that we could bring the network 10 years back. New usages, new traffic patte
 
   
 </aside>
+
 
     </div>
   </div>

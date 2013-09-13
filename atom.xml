@@ -4,7 +4,7 @@
   <title><![CDATA[Mind Passthrough]]></title>
   <link href="http://nicolasochem.github.io/atom.xml" rel="self"/>
   <link href="http://nicolasochem.github.io/"/>
-  <updated>2013-09-10T18:34:36-07:00</updated>
+  <updated>2013-09-12T22:53:02-07:00</updated>
   <id>http://nicolasochem.github.io/</id>
   <author>
     <name><![CDATA[Nicolas Ochem]]></name>
@@ -12,6 +12,29 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[2 measures to take back the Internet]]></title>
+    <link href="http://nicolasochem.github.io/blog/2013/09/12/2-measures-to-take-back-the-internet/"/>
+    <updated>2013-09-12T21:53:00-07:00</updated>
+    <id>http://nicolasochem.github.io/blog/2013/09/12/2-measures-to-take-back-the-internet</id>
+    <content type="html"><![CDATA[<p>They are at it again. Verizon is trying to <a href="http://www.infoworld.com/d/the-industry-standard/verizons-diabolical-plan-turn-the-web-pay-view-226662?page=0,0">turn the Internet into cable TV</a>. The Europen Commission is pushing <a href="http://www.laquadrature.net/en/kroes-unacceptable-anti-net-neutrality-law-rushed-despite-criticisms">carrier-controlled prioritization of traffic</a> in the Telecom package.</p>
+
+<p>Ten years ago the Internet was a thriving, neutral environment with a low barrier of entry to newcomers. But arguably, today&rsquo;s Internet is much more important to civil society. People from various backgrounds have stepped in the debate, and have told us that it is not just a bunch of engineer&rsquo;s issues anymore.</p>
+
+<p>It does not have to be this way. As Bruce Scheier said, engineers need to <a href="http://www.theguardian.com/commentisfree/2013/sep/05/government-betrayed-internet-nsa-spying">take bake the Internet</a> from 10 years of mishandling by lawyers, telcos, spooks and Big Media.</p>
+
+<p><span class='pullquote-right' data-pullquote='QoS and caching need to be included in the network neutrality equation.'>
+Not that we could bring the network 10 years back. New usages, new traffic patterns have emerged. Quality of Service is necessary to ensure quality audio and video calls. Caching is necessary to deal with the deluge of video traffic. QoS and caching need to be included in the network neutrality equation.
+</span></p>
+
+<ul>
+<li><p><a href="http://cyberlaw.stanford.edu/publications/network-neutrality-and-quality-service-what-non-discrimination-rule-should-look">Quality of Service should be end-user controlled</a>. Every provider should let a fraction of the subscriber&rsquo;s bandwidth be prioritized. Such priority marking should be honored by the provider regardless of the originating application. Of course, the end-user does not have to care about that. Her favourite app to make free calls would do that for her. But this measure guarantees fairness and low barrier of entry for the next-generation of conferencing protocols, websites and apps.</p></li>
+<li><p>Big data caches hidden in every part of the Internet should open up, at least partially. Just like modern web application hosting providers move their data around to bring it close to the service that needs it, the most popular content on the web should be cached in a neutral manner, close to the subscribers, i.e. in the provider&rsquo;s premises. Protocols should be developed to ensure fairness, and all datacenters serving Internet video should propagate the most popular content regardless of origin, be it a buzzing home-made video or the latest episode of your favourite TV blockbuster.</p></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Nested virtualization : a generic CPU config for Intel and AMD]]></title>
