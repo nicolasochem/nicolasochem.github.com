@@ -106,7 +106,7 @@
 
 <h2>Setting up submodules</h2>
 
-<p>There used to be no straightforward way to update your submodules. You would have to extract the SHA checksum of every submodule, point your superproject to each one of them. <code>git submodule update</code> would check out the submodule code. Add branching logic to the mix, and you ended up with fairly complex code.</p>
+<p>There used to be no straightforward way to update your submodules. You would have to extract the SHA checksum of the desired commit of every submodule, and point your superproject to each one of them. <code>git submodule update</code> would check out the submodule code. Add branching logic to the mix, and you ended up with fairly complex code.</p>
 
 <p>Since <a href="https://raw.github.com/git/git/master/Documentation/RelNotes/1.8.2.txt">git 1.8.2</a>, it has become much easier. When defining a submodule, you can now specify which branch it is supposed to track.</p>
 
