@@ -4,7 +4,7 @@
   <title><![CDATA[Mind Passthrough]]></title>
   <link href="http://nicolasochem.github.io/atom.xml" rel="self"/>
   <link href="http://nicolasochem.github.io/"/>
-  <updated>2014-02-05T17:56:12-08:00</updated>
+  <updated>2014-02-17T18:38:51+01:00</updated>
   <id>http://nicolasochem.github.io/</id>
   <author>
     <name><![CDATA[Nicolas Ochem]]></name>
@@ -14,9 +14,163 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Branch-aware Git Submodules]]></title>
+    <link href="http://nicolasochem.github.io/blog/2014/02/16/branch-aware-git-submodules/"/>
+    <updated>2014-02-16T17:59:00+01:00</updated>
+    <id>http://nicolasochem.github.io/blog/2014/02/16/branch-aware-git-submodules</id>
+    <content type="html"><![CDATA[<p>Large software projects often build their release from many repositories. It it tempting to set up a super-repository referencing all your shipping code through <a href="http://git-scm.com/docs/git-submodule">git submodules</a>. Since each commit of your superproject contains an unambiguous reference to a particular commit of every submodule, you can tag your superproject to define a release or nightly build.</p>
+
+<p>All it takes is a single command to retrieve all the source code for a particular release.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># checking out all source code for 3.11 release</span>
+</span><span class='line'>git clone --recursive superproject -b 3.11
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It is very useful for archival purposes or code escrow. In this post, we explore how to set that up.</p>
+
+<h2>Setting up submodules</h2>
+
+<p>There used to be no straightforward way to update your submodules. You would have to extract the SHA checksum of every submodule, point your superproject to each one of them. <code>git submodule update</code> would check out the submodule code. Add branching logic to the mix, and you ended up with fairly complex code.</p>
+
+<p>Since <a href="https://raw.github.com/git/git/master/Documentation/RelNotes/1.8.2.txt">git 1.8.2</a>, it has become much easier. When defining a submodule, you can now specify which branch it is supposed to track.</p>
+
+<p>Say you are building your superproject from components A and B. Your development builds are built from branch <code>master</code> of component A and branch <code>dev</code> of component B. The following commands will set up the superproject:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git init
+</span><span class='line'>git submodule --branch dev &lt;git repo of component A&gt;
+</span><span class='line'>git submodule --branch master &lt;git repo of component B&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Git will store the relationship with the sumbodules in the .gitmodule file.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># content of .gitmodules files on master branch</span>
+</span><span class='line'><span class="o">[</span>submodule <span class="s2">&quot;component_A&quot;</span><span class="o">]</span>
+</span><span class='line'>    <span class="nv">path</span> <span class="o">=</span> component_A
+</span><span class='line'>    <span class="nv">url</span> <span class="o">=</span> &lt;git repo of component A&gt;
+</span><span class='line'>    <span class="nv">branch</span> <span class="o">=</span> dev
+</span><span class='line'><span class="o">[</span>submodule <span class="s2">&quot;component_B&quot;</span><span class="o">]</span>
+</span><span class='line'>    <span class="nv">path</span> <span class="o">=</span> component_B
+</span><span class='line'>    <span class="nv">url</span> <span class="o">=</span> &lt;git repo of component B&gt;
+</span><span class='line'>    <span class="nv">branch</span> <span class="o">=</span> master
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then all it takes to fetch the last commits from the components is:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git submodule update --remote
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can issue <code>git submodule status</code> to verify that the commit SHA1 hashes match the latest commits of your component repositories:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nochem@bonk:/tmp/submodules/superproject<span class="nv">$ </span>git submodule status
+</span><span class='line'> 9665f1cd09faa63c6e3211712a805c49bf99c7c5 component_A <span class="o">(</span>heads/dev<span class="o">)</span>
+</span><span class='line'> 323db44f229e794850fec8afb5e8964d813d9a30 component_B <span class="o">(</span>heads/master<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then your automated build system may just automatically tag nightlies for all your components every night:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git checkout master
+</span><span class='line'>git submodule update --remote
+</span><span class='line'><span class="c"># do the build.</span>
+</span><span class='line'>git commit -a -m <span class="s2">&quot;Nightly build 345&quot;</span>
+</span><span class='line'>git tag master-nightly-345
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Of course, this does not dispense you from tagging your component repositories individually.</p>
+
+<h2>Adding a branch</h2>
+
+<p>If your release branch is named &ldquo;3.11&rdquo; on both components, you may create a branch 3.11 on your superproject, delete the submodules (with the <code>git submodule deinit</code> command available since <a href="https://raw.github.com/git/git/master/Documentation/RelNotes/1.8.3.txt">release 1.8.3</a> of git), then recreate them again giving the correct <code>--branch</code> option.</p>
+
+<p>Or you may just edit your .gitmodules file and check it in to the repo.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="c"># content of manually edited .gitmodules files on 3.11 release branch</span>
+</span><span class='line'><span class="o">[</span>submodule <span class="s2">&quot;component_A&quot;</span><span class="o">]</span>
+</span><span class='line'>    <span class="nv">path</span> <span class="o">=</span> component_A
+</span><span class='line'>    <span class="nv">url</span> <span class="o">=</span> &lt;git repo of component A&gt;
+</span><span class='line'>    <span class="nv">branch</span> <span class="o">=</span> 3.11
+</span><span class='line'><span class="o">[</span>submodule <span class="s2">&quot;component_B&quot;</span><span class="o">]</span>
+</span><span class='line'>    <span class="nv">path</span> <span class="o">=</span> component_B
+</span><span class='line'>    <span class="nv">url</span> <span class="o">=</span> &lt;git repo of component B&gt;
+</span><span class='line'>    <span class="nv">branch</span> <span class="o">=</span> 3.11
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then, when on branch 3.11 of your superproject, <code>git submodule update --remote</code> will fetch the latest release branch content from all submodules.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>nochem@bonk:/tmp/submodules/superproject<span class="nv">$ </span>git submodule update --remote
+</span><span class='line'>Submodule path <span class="s1">&#39;component_A&#39;</span>: checked out <span class="s1">&#39;56d62717ac6f5fb4e67daa331c5ef566588cec4e&#39;</span>
+</span><span class='line'>Submodule path <span class="s1">&#39;component_B&#39;</span>: checked out <span class="s1">&#39;312df465c70cb81ffaf6dd6f2d505df44c8db45f&#39;</span>
+</span><span class='line'>nochem@bonk:/tmp/submodules/superproject<span class="nv">$ </span>git submodule status
+</span><span class='line'> 56d62717ac6f5fb4e67daa331c5ef566588cec4e component_A <span class="o">(</span>heads/3.11<span class="o">)</span>
+</span><span class='line'> 312df465c70cb81ffaf6dd6f2d505df44c8db45f component_B <span class="o">(</span>heads/3.11<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You may now tag and commit again:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git commit -a -m <span class="s2">&quot;release 3.11 nightly build 5&quot;</span>
+</span><span class='line'>git tag <span class="s2">&quot;3.11-nightly-5&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You have now set a multi-branch superproject tracking all branches of all your components. Isn&rsquo;t it nice ?</p>
+
+<p>Thus said, a word of warning is necessary. Git submodules are recently receiving a lot of improvements, but <a href="http://codingkilledthecat.wordpress.com/2012/04/28/why-your-company-shouldnt-use-git-submodules/">they are no panacea</a>. If your component repositories are very dependent on one another, and developers are likely to commit to several repositories, then you may be better off having one big repository. This model works well when your different components are worked on by different teams, and you are looking for an easy way to check out or tag all the code.</p>
+
+<p><em>All the code used in this post is also available as <a href="https://gist.github.com/nicolasochem/9054876">a gist</a></em>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[2 measures to take back the Internet]]></title>
     <link href="http://nicolasochem.github.io/blog/2013/09/12/2-measures-to-take-back-the-internet/"/>
-    <updated>2013-09-12T21:53:00-07:00</updated>
+    <updated>2013-09-12T21:53:00+02:00</updated>
     <id>http://nicolasochem.github.io/blog/2013/09/12/2-measures-to-take-back-the-internet</id>
     <content type="html"><![CDATA[<p>They are at it again. Verizon is trying to <a href="http://www.infoworld.com/d/the-industry-standard/verizons-diabolical-plan-turn-the-web-pay-view-226662?page=0,0">turn the Internet into cable TV</a>. The Europen Commission is pushing <a href="http://www.laquadrature.net/en/kroes-unacceptable-anti-net-neutrality-law-rushed-despite-criticisms">carrier-controlled prioritization of traffic</a> in the Telecom package.</p>
 
@@ -39,7 +193,7 @@ Not that we could bring the network 10 years back. New usages, new traffic patte
   <entry>
     <title type="html"><![CDATA[Nested virtualization : a generic CPU config for Intel and AMD]]></title>
     <link href="http://nicolasochem.github.io/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd/"/>
-    <updated>2013-09-08T23:20:00-07:00</updated>
+    <updated>2013-09-08T23:20:00+02:00</updated>
     <id>http://nicolasochem.github.io/blog/2013/09/08/nested-virtualization-a-generic-cpu-config-for-intel-and-amd</id>
     <content type="html"><![CDATA[<p>Nested virtualization with Libvirt is not straightforward. Your mileage may vary depending on your CPU and operating system.</p>
 
