@@ -4,7 +4,7 @@
   <title><![CDATA[Mind Passthrough]]></title>
   <link href="http://nicolasochem.github.io/atom.xml" rel="self"/>
   <link href="http://nicolasochem.github.io/"/>
-  <updated>2014-02-17T18:38:51+01:00</updated>
+  <updated>2014-02-17T19:08:59+01:00</updated>
   <id>http://nicolasochem.github.io/</id>
   <author>
     <name><![CDATA[Nicolas Ochem]]></name>
@@ -43,8 +43,8 @@
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>git init
-</span><span class='line'>git submodule --branch dev &lt;git repo of component A&gt;
-</span><span class='line'>git submodule --branch master &lt;git repo of component B&gt;
+</span><span class='line'>git submodule --branch dev add &lt;git repo of component A&gt;
+</span><span class='line'>git submodule --branch master add &lt;git repo of component B&gt;
 </span></code></pre></td></tr></table></div></figure>
 
 
