@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: vagrant | Mind Passthrough]]></title>
+  <link href="http://nicolasochem.github.io/blog/categories/vagrant/atom.xml" rel="self"/>
+  <link href="http://nicolasochem.github.io/"/>
+  <updated>2014-04-22T08:55:50-07:00</updated>
+  <id>http://nicolasochem.github.io/</id>
+  <author>
+    <name><![CDATA[Nicolas Ochem]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Archipel + Vagrant + Puppet]]></title>
+    <link href="http://nicolasochem.github.io/blog/2014/04/22/archipel-plus-vagrant-plus-puppet/"/>
+    <updated>2014-04-22T08:45:00-07:00</updated>
+    <id>http://nicolasochem.github.io/blog/2014/04/22/archipel-plus-vagrant-plus-puppet</id>
+    <content type="html"><![CDATA[<p><a href="http://archipelproject.org/">Archipel</a> is a lightweight cloud management platform built on top of libvirt. While it does not match the feature set of more popular orchestrators, Archipel&rsquo;s Cappuccino-based UI is way better than every other cloud management platform out there.</p>
+
+<p>I spent some time last year trying to maintain an environment where I could hack on <a href="https://github.com/ArchipelProject/Archipel/tree/master/ArchipelAgent">ArchipelAgent</a>, Archipel&rsquo;s Python backend, and test it in a box.</p>
+
+<p>To test Archipel, I need one virtual machine acting as ejabberd server and central agent, and one or more nested hypervisors. I wrote some scripts to manage the lifecycle of this setup. The features were :</p>
+
+<ul>
+<li>ability to start and stop all Archipel daemons</li>
+<li>deploy the Archipel working tree in all VMs by NFS</li>
+<li>send commands to the VMs shell by script</li>
+</ul>
+
+
+<p>I ended up writing <a href="https://github.com/ArchipelProject/Archipel/tree/master/ArchipelTest">mostly unmaintainable code</a>.</p>
+
+<p>Then a few months ago I stumbled upon the <a href="https://ttboj.wordpress.com/">Technical Blog of James</a>. James has made <a href="https://github.com/purpleidea/puppet-gluster/tree/master/vagrant">puppet-gluster-vagrant</a>, an awesome self-contained hacking environment for glusterfs which turned out very handy to test a gluster setup I am using at work. The interesting part is that it is running in Vagrant with <a href="https://github.com/pradels/vagrant-libvirt">Vagrant-Libvirt</a> plugin. Since Archipel is a pure Libvirt shop, it sounds like a plan, now, does it not ?</p>
+
+<h2>Setup</h2>
+
+<p>Vagrant is a deployment and prototyping environment perfectly adapted for the use case described above, but it was designed around Virtualbox. Only a few months ago, feature parity with Libvirt was achieved. Still, based on James' blog post, Libvirt felt like a second-class citizen, at least on Fedora 20. So I decided to give it a try on Ubuntu 14.04 LTS.</p>
+
+<p>First things first, I installed vagrant and the necessary plugin :</p>
+
+<p>```</p>
+
+<h1>This will install Vagrant 1.4.1.</h1>
+
+<h1>Good, because vagrant-libvirt is currently broken with Vagrant 1.5.</h1>
+
+<p>apt-get install vagrant</p>
+
+<p>vagrant plugin install vagrant-libvirt
+```</p>
+
+<p>I added this line to my .bashrc to make Vagrant use libvirt by default :
+<code>
+export VAGRANT_DEFAULT_PROVIDER=libvirt # libvirt as default vagrant provider
+</code></p>
+
+<p>I then downloaded a centos6.5 box in libvirt format :
+<code>
+vagrant box add centos-6 https://download.gluster.org/pub/gluster/purpleidea/vagrant/centos-6.box --provider=libvirt
+</code></p>
+
+<p>Then I created a Vagrantfile using <code>vagrant init</code> and created 3 VMs :</p>
+
+<p>``` ruby</p>
+
+<h1>&ndash;<em>&ndash; mode: ruby &ndash;</em>&ndash;</h1>
+
+<h1>vi: set ft=ruby :</h1>
+
+<p>VAGRANTFILE_API_VERSION = &ldquo;2&rdquo;</p>
+
+<p>Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = &ldquo;centos-6&rdquo;
+  config.vm.define :central_server, :primary => true
+  config.vm.define :agent_1
+  config.vm.define :agent_2
+end
+```</p>
+
+<p>Then issuing <code>vagrant up</code> brought my 3 VMs up. I was able to login to them using i.e. <code>vagrant ssh central_server</code>. <code>vagrant destroy</code> sent them into oblivion.</p>
+
+<p>Nested virtualization works <a href="https://plus.google.com/+NicolasOchem/posts/JY6yhSKXLEj">out-of-the-box on Ubuntu</a>, provided that you set up the correct options in your VM XML definition. Vagrant-libvirt has a configuration option that will do that for you :
+``` ruby
+Vagrant.configure(&ldquo;2&rdquo;) do |config|
+  config.vm.define &ldquo;agent_1&rdquo; do |agent|</p>
+
+<pre><code>agent.vm.provider :libvirt do |domain|
+  domain.nested = true
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>The rest of the Vagrantfile is fairly standard Ruby code. The default comments make it really easy to incrementally create the setup you want. <a href="https://github.com/ArchipelProject/puppet-archipel/blob/master/vagrant/archipel/Vagrantfile">Check out the final Vagrantfile</a>.</p>
+
+<p>There were a few hurdles before I reached that state though :</p>
+
+<ul>
+<li>for some reason my Ubuntu laptop will not allow NFS exports anything under my home directory. Maybe because it is encrypted ? Anyways, I ended up working as root and using <code>/root/workspace/archipel-puppet-vagrant</code> as working directory. I had to make it world-readable.</li>
+<li>Ubuntu&rsquo;s firewall, ufw, does not let me export NFS folders. I had to deactivate it completely by issuing <code>sudo ifw disable</code>. Just shutting it down does not do the trick as it keeps coming back up.</li>
+</ul>
+
+
+<p>It looks like libvirt is still not a first-class citizen in the Vagrant world, but hopefully the situation will improve.</p>
+
+<p>You can check more advice on how to run vagrant with libvirt on <a href="https://ttboj.wordpress.com/2013/12/09/vagrant-on-fedora-with-libvirt/">this blog post</a>.</p>
+
+<h2>Provisioning</h2>
+
+<p>I have 3 empty boxes, and I want to turn them into a running Archipel setup, with one central server and 2 agents running VMs. How do I do that in 2014 ? I use a provisioning solution, like Puppet.</p>
+
+<p>That should be easy because Vagrant supports Puppet out of the box. The <code>vagrant provision</code> command will execute puppet manifests on all nodes. The manifests will also be executed by default if they are present when you do <code>vagrant up</code>.</p>
+
+<p>James&rsquo;s <a href="https://github.com/purpleidea/puppet-gluster/tree/master/vagrant">puppet-gluster-vagrant</a> setup has a standalone puppet server box defined in his Vagrantfile. All the other VMs are using it as puppetmaster. This mimics a production environment in the best possible way, but it is overkill for me. I am only going to write Puppet manifests on my workspace and load them in the VMs using headless Puppet.</p>
+
+<p>I followed the installation instructions for <a href="https://github.com/ArchipelProject/Archipel/wiki/Installation%3A-Agent">Archipel Agent</a>, <a href="https://github.com/ArchipelProject/Archipel/wiki/Ejabberd%3A-Configuration">Archipel Server</a> and <a href="https://github.com/ArchipelProject/Archipel/wiki/Central-agent">Archipel Central Agent</a>. I turned these instructions into a <a href="https://github.com/ArchipelProject/puppet-archipel/">Puppet module for Archipel</a>. The Vagrantfile is in a subdirectory of this module.</p>
+
+<p>A few caveats apply :</p>
+
+<ul>
+<li>the setup is very slow over ssh because of DNS timeouts. Bringing up the setup from scratch takes more time than it should. I have found <a href="https://gist.github.com/jedi4ever/5657094">a lot of suggestions</a> but none seemed to help.</li>
+<li>there is no DNS support so I had to add <a href="https://github.com/ArchipelProject/puppet-archipel/blob/master/vagrant/archipel/Vagrantfile#L67">commands in the Vagrantfile</a> to set the hostnames of every node manually in <code>/etc/hosts</code> of every node. There is a Vagrant plugin named Landrush that does just that for Virtualbox. Hopefully <a href="https://github.com/phinze/landrush/issues/20">libvirt support will be coming soon</a>.</li>
+</ul>
+
+
+<h2>Hacking</h2>
+
+<p>Archipel repository is checked out as a submodule inside puppet-archipel. This way, it gets NFS-mounted to every node.</p>
+
+<p>ArchipelAgent already has a &ldquo;developer mode&rdquo; built in. Running <code>buildAgent -d</code> will set up redirects from the python library folder to the development environment. So I added this step in the Puppet manifest.</p>
+
+<p>It means that editing the source code in my laptop deploys it instantly to all nodes. Testing changes is trivial.</p>
+
+<p>Probably the best part of this setup is the portability of the configuration. In theory, anyone can check out the code, perform <code>vagrant up</code> and deploy the same environment in minutes. The barrier of entry for a potential developer is pushed to the lowest limit, no matter how distributed the setup is. That is a huge asset for cloud management systems.</p>
+
+<p>To start using archipel-libvirt-vagrant, check out the <a href="https://github.com/ArchipelProject/puppet-archipel/blob/master/README.md">README</a>. Enjoy !</p>
+]]></content>
+  </entry>
+  
+</feed>

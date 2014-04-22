@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | Mind Passthrough]]></title>
   <link href="http://nicolasochem.github.io/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://nicolasochem.github.io/"/>
-  <updated>2014-02-17T19:26:49+01:00</updated>
+  <updated>2014-04-22T08:55:50-07:00</updated>
   <id>http://nicolasochem.github.io/</id>
   <author>
     <name><![CDATA[Nicolas Ochem]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Branch-aware Git Submodules]]></title>
     <link href="http://nicolasochem.github.io/blog/2014/02/16/branch-aware-git-submodules/"/>
-    <updated>2014-02-16T17:59:00+01:00</updated>
+    <updated>2014-02-16T17:59:00-08:00</updated>
     <id>http://nicolasochem.github.io/blog/2014/02/16/branch-aware-git-submodules</id>
     <content type="html"><![CDATA[<p>Large software projects often build their release from many repositories. It it tempting to set up a super-repository referencing all your shipping code through <a href="http://git-scm.com/docs/git-submodule">git submodules</a>. Since each commit of your superproject contains an unambiguous reference to a particular commit of every submodule, you can tag your superproject to define a release or nightly build.</p>
 
