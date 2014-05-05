@@ -4,7 +4,7 @@
   <title><![CDATA[Category: archipel | Mind Passthrough]]></title>
   <link href="http://nicolasochem.github.io/blog/categories/archipel/atom.xml" rel="self"/>
   <link href="http://nicolasochem.github.io/"/>
-  <updated>2014-04-22T08:58:23-07:00</updated>
+  <updated>2014-05-05T00:01:58-07:00</updated>
   <id>http://nicolasochem.github.io/</id>
   <author>
     <name><![CDATA[Nicolas Ochem]]></name>
@@ -102,7 +102,7 @@ end
 
 <ul>
 <li>for some reason my Ubuntu laptop will not allow NFS exports anything under my home directory. Maybe because it is encrypted ? Anyways, I ended up working as root and using <code>/root/workspace/archipel-puppet-vagrant</code> as working directory. I had to make it world-readable.</li>
-<li>Ubuntu&rsquo;s firewall, ufw, does not let me export NFS folders. I had to deactivate it completely by issuing <code>sudo ifw disable</code>. Just shutting it down does not do the trick as it keeps coming back up.</li>
+<li>Ubuntu&rsquo;s firewall, ufw, does not let me export NFS folders. I had to deactivate it completely by issuing <code>sudo ufw disable</code>. Just shutting it down does not do the trick as it keeps coming back up.</li>
 </ul>
 
 
